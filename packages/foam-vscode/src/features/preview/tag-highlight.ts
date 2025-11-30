@@ -3,6 +3,7 @@
 import markdownItRegex from 'markdown-it-regex';
 import { FoamWorkspace } from '../../core/model/workspace';
 import { Logger } from '../../core/utils/log';
+import { escapeHtml } from '../../utils/escape-html';
 
 export const markdownItFoamTags = (
   md: markdownit,
@@ -28,6 +29,6 @@ export const markdownItFoamTags = (
 // Commands can't be run in the preview (see https://github.com/microsoft/vscode/issues/102532)
 // for we just return the tag as a span
 const getFoamTag = (content: string) =>
-  `<span class='foam-tag'>${content}</span>`;
+  `<span class='foam-tag'>${escapeHtml(content)}</span>`;
 
 export default markdownItFoamTags;

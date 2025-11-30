@@ -18,6 +18,7 @@ import {
   asAbsoluteWorkspaceUri,
   isVirtualWorkspace,
 } from '../../services/editor';
+import { escapeHtml } from '../../utils/escape-html';
 
 export const WIKILINK_EMBED_REGEX =
   /((?:(?:full|content)-(?:inline|card)|full|content|inline|card)?!\[\[[^[\]]+?\]\])/;
@@ -45,7 +46,7 @@ export const markdownItWikilinkEmbed = (
         if (isVirtualWorkspace()) {
           return `
 <div class="foam-embed-not-supported-warning">
-  Embed not supported in virtual workspace: ![[${wikilink}]]
+  Embed not supported in virtual workspace: ![[${escapeHtml(wikilink)}]]
 </div>
           `;
         }
@@ -53,7 +54,7 @@ export const markdownItWikilinkEmbed = (
         const includedNote = workspace.find(wikilink);
 
         if (!includedNote) {
-          return `![[${wikilink}]]`;
+          return `![[${escapeHtml(wikilink)}]]`;
         }
 
         const cyclicLinkDetected = refsStack.includes(
@@ -63,11 +64,11 @@ export const markdownItWikilinkEmbed = (
         if (cyclicLinkDetected) {
           return `
 <div class="foam-cyclic-link-warning">
-  Cyclic link detected for wikilink: ${wikilink}
+  Cyclic link detected for wikilink: ${escapeHtml(wikilink)}
   <div class="foam-cyclic-link-warning__stack">
     Link sequence: 
     <ul>
-      ${refsStack.map(ref => `<li>${ref}</li>`).join('')}
+      ${refsStack.map(ref => `<li>${escapeHtml(ref)}</li>`).join('')}
     </ul>
   </div>
 </div>
@@ -386,15 +387,6 @@ function addDefaultUnit(value: string): string {
     return value + 'px';
   }
   return value;
-}
-
-function escapeHtml(text: string): string {
-  return text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
 }
 
 export { parseImageParameters, generateImageStyles };
