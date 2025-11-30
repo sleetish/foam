@@ -10,6 +10,7 @@ import { Range } from '../../core/model/range';
 import { isEmpty } from 'lodash';
 import { toSlug } from '../../utils/slug';
 import { isNone } from '../../core/utils';
+import { escapeHtml } from '../../utils/escape-html';
 
 export const markdownItWikilinkNavigation = (
   md: markdownit,
@@ -66,9 +67,13 @@ export const markdownItWikilinkNavigation = (
 };
 
 const getPlaceholderLink = (content: string) =>
-  `<a class='foam-placeholder-link' title="Link to non-existing resource" href="javascript:void(0);">${content}</a>`;
+  `<a class='foam-placeholder-link' title="Link to non-existing resource" href="javascript:void(0);">${escapeHtml(
+    content
+  )}</a>`;
 
 const getResourceLink = (title: string, link: string, label: string) =>
-  `<a class='foam-note-link' title='${title}' href='${link}' data-href='${link}'>${label}</a>`;
+  `<a class='foam-note-link' title='${escapeHtml(title)}' href='${escapeHtml(
+    link
+  )}' data-href='${escapeHtml(link)}'>${escapeHtml(label)}</a>`;
 
 export default markdownItWikilinkNavigation;

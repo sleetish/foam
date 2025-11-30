@@ -3,6 +3,7 @@
 import markdownItRegex from 'markdown-it-regex';
 import { ResourceParser } from '../../core/model/note';
 import { FoamWorkspace } from '../../core/model/workspace';
+import { escapeHtml } from '../../utils/escape-html';
 
 export const WIKILINK_EMBED_REGEX =
   /((?:(?:full|content)-(?:inline|card)|full|content|inline|card)?!\[\[[^[\]]+?\]\])/;
@@ -18,7 +19,7 @@ export const markdownItWikilinkEmbed = (
     replace: (wikilinkItem: string) => {
       return `
       <div class="foam-embed-not-supported-warning">
-        Embed not supported in web mode: ${wikilinkItem}
+        Embed not supported in web mode: ${escapeHtml(wikilinkItem)}
       </div>
 `;
     },
