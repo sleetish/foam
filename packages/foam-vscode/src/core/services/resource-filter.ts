@@ -58,8 +58,9 @@ function createSafeExpressionEvaluator(
 ): ((resource: Resource) => boolean) | undefined {
   // Pattern for safe expressions: resource.property[.subproperty] operator "value"
   // Supports ===, !==, ==, != operators
+  // Only allows simple strings without escape sequences for simplicity and safety
   const safeExpressionPattern =
-    /^\s*resource\.([\w.]+)\s*(===|!==|==|!=)\s*"([^"\\]*(?:\\.[^"\\]*)*)"\s*$/;
+    /^\s*resource\.([\w.]+)\s*(===|!==|==|!=)\s*"([^"\\]*)"\s*$/;
 
   const match = expression.match(safeExpressionPattern);
   if (!match) {
@@ -99,15 +100,14 @@ function createSafeExpressionEvaluator(
 
     // Convert to string for comparison (handles undefined and other types)
     const resourceValue = String(current ?? '');
-    const compareValue = value.replace(/\\"/g, '"'); // Unescape quotes
 
     switch (operator) {
       case '===':
       case '==':
-        return resourceValue === compareValue;
+        return resourceValue === value;
       case '!==':
       case '!=':
-        return resourceValue !== compareValue;
+        return resourceValue !== value;
       default:
         return false;
     }
